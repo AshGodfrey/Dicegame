@@ -1,0 +1,118 @@
+"""The program should do the following:
+1) Ask the player to make a bet
+Ask the player to roll a dice
+Have the computer roll a dice
+Roll Two Pairs of Dice --
+Add the values of the rolls
+Compare computer dice vs player dice
+Determine the winner (user or computer)."""
+
+from random import randint
+from time import sleep
+
+player_chips = 100
+player_dice_roll = 0
+comp_dice_roll = 0
+player_bet = 0
+
+#Tell Player their chip amount
+print ("You have " + str(player_chips) + " chips.")
+print ("Table minimum bet is 5.")
+
+#get a bet from a player
+def get_bet():
+  global player_bet 
+  player_bet = int(input("What's your bet?: "))
+  return player_bet
+
+def check_bet(chips, bet):
+  if player_chips < 5: 
+    print("You don't have enough chips! Sorry :(")
+    quit()
+  if player_bet < 5: 
+    print ("table minimum is 5")
+    get_bet()
+    check_bet(chips, bet)
+  if player_bet > player_chips: 
+    print("You don't have that many chips!")
+    get_bet()
+    check_bet(chips, bet)
+  else: 
+    print ("You bet " + str(player_bet) + " chips")
+    return player_bet
+
+#This Function Rolls 2 Dice
+def dice_roll(number_of_sides): 
+  first_roll = randint(1, number_of_sides)
+  second_roll= randint(1, number_of_sides)
+  total = first_roll + second_roll
+  return total
+
+
+def dice_roller():
+#Have the computer roll it's dice
+  print(" ")
+  print(" ")
+  print ("The dealer is rolling...")
+  sleep(2)
+  comp_dice_roll = dice_roll(6)
+  print ("the dealer rolled: " + str(comp_dice_roll))
+  return comp_dice_roll
+
+  #have the human roll their dice.
+  print(" ")
+  print(" ")
+  print("Your Turn! Good Luck!")
+  print("rolling...")
+  sleep(2)
+  player_dice_roll = dice_roll(6)
+  print ("you rolled: " + str(player_dice_roll))
+  return player_dice_roll
+
+#determine the winner
+def winner(chips, bet):
+  global player_chips
+  global player_bet
+  if player_dice_roll > comp_dice_roll:
+    print(" ")
+    print(" ")
+    print ("--YOU WON " + str(bet * 1.5) + " --")
+    print ("Your new total is " + str(bet + player_chips))
+    player_chips = player_chips + (player_bet * 1.5)
+    return player_chips
+  else: 
+    print(" ")
+    print(" ")
+    print ("--YOU LOST--")
+    print ("Your new total is " + str(player_chips - player_bet))
+    player_chips = player_chips - player_bet
+    return player_chips
+  
+
+def keep_playing():
+  print(" ")
+  print(" ")
+  choice = input("Would you like to leave the table?") 
+  if choice == "no" or choice == "NO":
+    start_f()
+  if choice == "yes" or choice =="YES":
+    print("Okay, see you later")
+    quit()
+
+
+def start_f():
+  global player_chips
+  start = input("Would you like to play?")
+  if start == "no" or start == "NO":
+    print("Okay, see you later")
+    quit()
+  elif start == "yes" or start == "YES":
+    get_bet()
+    check_bet(player_chips, player_bet)
+    dice_roller()
+    winner(player_chips, player_bet)
+    keep_playing()
+  else: 
+    print("it's a yes or no question")
+
+start_f()
